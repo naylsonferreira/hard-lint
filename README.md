@@ -1,9 +1,10 @@
 # hard-lint
 
-⚙️ Configuração **rigorosa** de ESLint para projetos TypeScript e Next.js.
+⚙️ Configuração **rigorosa** de ESLint para projetos TypeScript.
 
 [![npm version](https://img.shields.io/npm/v/hard-lint.svg)](https://www.npmjs.com/package/hard-lint)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/naylsonferreira/hard-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/naylsonferreira/hard-lint/actions/workflows/ci.yml)
 
 ## O que é?
 
