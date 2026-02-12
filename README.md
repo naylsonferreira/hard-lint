@@ -206,7 +206,7 @@ export default [
 
 ## Contribuindo
 
-1. Fork o repositório (https://github.com/naylsonfsa/hard-lint)
+1. Fork o repositório (https://github.com/naylsonferreira/hard-lint)
 2. Crie uma branch (`git checkout -b feature/improvement`)
 3. Commit suas mudanças (`git commit -m 'Add: melhoria'`)
 4. Push para a branch (`git push origin feature/improvement`)
@@ -221,4 +221,4 @@ export default [
 
 ## Licença
 
-MIT © 2026 naylsonfsa
+MIT © 2026 naylsonferreira
