@@ -1,6 +1,6 @@
 /**
  * hard-lint
- * Configuração rigorosa de ESLint para projetos TypeScript e Next.js
+ * Configuração rigorosa de ESLint para projetos TypeScript
  */
 
 export type { HardLintConfig } from './types';
