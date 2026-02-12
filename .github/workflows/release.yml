@@ -6,15 +6,38 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
-  release-please:
+  release:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: actions/checkout@v4
         with:
-          release-type: node
-          package-name: hard-lint
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Detect version bump
+        id: detect
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          if echo "$COMMIT_MSG" | grep -q "^feat:"; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          elif echo "$COMMIT_MSG" | grep -q "^fix:"; then
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          else
+            echo "bump=none" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Get current version
+        id: current
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Create tag and release
+        if: steps.detect.outputs.bump != 'none'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v${{ steps.current.outputs.version }}
+          generateReleaseNotes: true
+          makeLatest: true
