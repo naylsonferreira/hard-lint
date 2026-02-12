@@ -28,17 +28,39 @@ jobs:
             echo "bump=none" >> $GITHUB_OUTPUT
           fi
       
-      - name: Get current version
-        id: current
+      - name: Calculate next version
+        if: steps.detect.outputs.bump != 'none'
+        id: version
         run: |
-          VERSION=$(jq -r '.version' package.json)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          if [ -n "$LATEST_TAG" ]; then
+            BASE_VERSION="${LATEST_TAG#v}"
+          else
+            BASE_VERSION=$(jq -r '.version' package.json)
+          fi
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+
+          case "${{ steps.detect.outputs.bump }}" in
+            minor)
+              NEXT_VERSION="$MAJOR.$((MINOR + 1)).0"
+              ;;
+            patch)
+              NEXT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+              ;;
+            *)
+              NEXT_VERSION="$BASE_VERSION"
+              ;;
+          esac
+
+          npm version "$NEXT_VERSION" --no-git-tag-version --allow-same-version
+          echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
       
       - name: Create tag and release
         if: steps.detect.outputs.bump != 'none'
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ steps.current.outputs.version }}
+          tag: v${{ steps.version.outputs.version }}
           generateReleaseNotes: true
           makeLatest: true
       
