@@ -11,10 +11,10 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
 
     steps:
       - uses: googleapis/release-please-action@v4
         with:
           release-type: node
           package-name: hard-lint
+          token: ${{ secrets.GITHUB_TOKEN }}
