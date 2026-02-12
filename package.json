@@ -2,8 +2,17 @@
   "name": "hard-lint",
   "version": "0.1.0",
   "description": "Configuração rigorosa de ESLint para projetos TypeScript",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./eslint.config.mjs": "./eslint.config.mjs"
+  },
   "files": [
     "dist",
     "eslint.config.mjs"

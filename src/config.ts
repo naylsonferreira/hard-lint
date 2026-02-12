@@ -2,7 +2,7 @@
  * Funções para criar configurações hard-lint customizadas
  */
 
-import type { HardLintConfig, ESLintConfig } from './types';
+import type { HardLintConfig, ESLintConfig } from './types.js';
 
 /**
  * Cria uma configuração hard-lint customizada

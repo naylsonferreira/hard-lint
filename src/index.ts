@@ -3,5 +3,6 @@
  * Configuração rigorosa de ESLint para projetos TypeScript
  */
 
-export type { HardLintConfig } from './types';
-export { createHardLintConfig } from './config';
+export { default } from './preset.js';
+export type { HardLintConfig } from './types.js';
+export { createHardLintConfig, PRESETS, SEVERITY } from './config.js';
