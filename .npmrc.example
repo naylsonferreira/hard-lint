@@ -1,0 +1,3 @@
+# Configuração NPM
+registry=https://registry.npmjs.org/
+always-auth=false

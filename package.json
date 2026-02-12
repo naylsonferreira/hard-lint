@@ -1,0 +1,66 @@
+{
+  "name": "hard-lint",
+  "version": "0.1.0",
+  "description": "Configuração rigorosa de ESLint para projetos TypeScript e Next.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "eslint.config.mjs"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
+    "validate-e2e": "node scripts/validate-e2e-selectors.js",
+    "prepare": "npm run build && husky install"
+  },
+  "keywords": [
+    "eslint",
+    "config",
+    "typescript",
+    "next.js",
+    "linting",
+    "code-quality"
+  ],
+  "author": "naylsonfsa",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": ">=9.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^14.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naylsonfsa/hard-lint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/naylsonfsa/hard-lint/issues"
+  },
+  "homepage": "https://github.com/naylsonfsa/hard-lint#readme",
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "eslint"
+    ],
+    "**/*.{e2e,test}.{ts,tsx,js,jsx}": [
+      "node scripts/validate-e2e-selectors.js"
+    ]
+  }
+}

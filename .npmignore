@@ -1,0 +1,34 @@
+# Arquivo fonte
+src/
+*.ts
+!dist/**/*.d.ts
+
+# Configuração
+tsconfig.json
+eslint.config.base.mjs
+.eslintrc*
+
+# Testes e build
+coverage/
+node_modules/
+.turbo/
+
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Misc
+.npmrc
+.prettierignore
+.prettierrc
