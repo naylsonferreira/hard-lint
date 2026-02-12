@@ -27,16 +27,17 @@
   "author": "naylsonferreira",
   "license": "MIT",
   "peerDependencies": {
-    "eslint": ">=9.0.0",
+    "eslint": ">=8.56.0",
     "typescript": ">=5.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.1",
     "@commitlint/config-conventional": "^20.4.1",
-    "@eslint/js": "^10.0.1",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "eslint": "^9.0.0",
+    "@eslint/js": "^9.0.0",
+    "@types/eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.56.0",
     "eslint-config-next": "^14.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
