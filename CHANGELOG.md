@@ -11,14 +11,27 @@ e este projeto segue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Scripts de release automático (npm run release:*)
-- GitHub Actions workflow para publicação automática no npm
-- PeerDependencies para commitlint no hard-lint
+### Changed
+
+---
+
+## [0.4.0] - 2026-02-13
+
+### Added
+
+- Script `install.js` para configuração automática de Husky e lint-staged
+- Comando `node node_modules/hard-lint/scripts/install.js` para setup pré-commit
+- Suporte a `.hardlint/` como diretório customizado de git hooks
+- Configuração centralizada do commitlint em `hard-lint/commitlint.config.cjs`
+- Husky e lint-staged movidos para `dependencies` (agora obrigatórios)
+- Bin entry no package.json para CLI futura
 
 ### Changed
 
-- Atualizado README com documentação completa de pre-commit e commitlint
-- Removido husky do blacksmith-admin (hard-lint gerencia os hooks nativamente)
+- Renomeado diretório de hooks de `.husky/` para `.hardlint/`
+- Commitlint agora aponta para configuração centralizada do hard-lint
+- Git `core.hooksPath` configurado automaticamente para `.hardlint`
+- Pre-commit hook agora não precisa estar no repositório consumidor
 
 ---
 
