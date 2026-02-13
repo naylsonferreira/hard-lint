@@ -12,12 +12,19 @@ const hardlintRoot = path.join(__dirname, '..', '..');
 const commitlintBin = path.join(hardlintRoot, 'node_modules', '@commitlint', 'cli', 'lib', 'cli.js');
 const commitlintConfig = path.join(hardlintRoot, 'commitlint.config.cjs');
 
+// Get the commit message file path from the first argument
+const commitMessageFile = process.argv[2];
+
+if (!commitMessageFile) {
+  console.error('Error: commit message file not provided');
+  process.exit(1);
+}
+
 try {
-  execSync(`node "${commitlintBin}" --edit "$1" --config "${commitlintConfig}"`, {
+  execSync(`node "${commitlintBin}" --edit "${commitMessageFile}" --config "${commitlintConfig}"`, {
     cwd: process.cwd(),
     stdio: 'inherit',
     shell: true,
-    env: { ...process.env },
   });
   process.exit(0);
 } catch (error) {
