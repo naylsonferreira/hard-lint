@@ -1,6 +1,66 @@
 import js from '@eslint/js';
-import tseslint from '@typescript-eslint/eslint-plugin';
+import type { Rule } from 'eslint';
 import tsparser from '@typescript-eslint/parser';
+
+const hardlintPlugin = {
+  rules: {
+    'no-comments': {
+      meta: {
+        type: 'problem',
+        docs: {
+          description: 'Disallow comments except ESLint directives'
+        },
+        schema: [],
+        messages: {
+          noComments: 'Comments are not allowed.'
+        }
+      },
+      create(context: Rule.RuleContext) {
+        const directivePattern =
+          /^eslint-(disable|enable|disable-next-line|disable-line)(\s|$)/;
+        type CommentLike = {
+          type: 'Line' | 'Block';
+          value: string;
+          loc?: {
+            start: { line: number; column: number };
+            end: { line: number; column: number };
+          } | null;
+        };
+
+        return {
+          Program() {
+            const sourceCode = context.getSourceCode();
+            const comments = sourceCode.getAllComments();
+
+            comments.forEach((comment: CommentLike) => {
+              const value = comment.value.trim();
+              
+              // Only allow ESLint directives
+              if (directivePattern.test(value)) {
+                return;
+              }
+
+              const reportLoc =
+                comment.loc ??
+                ({
+                  start: { line: 1, column: 0 },
+                  end: { line: 1, column: 0 }
+                } as {
+                  start: { line: number; column: number };
+                  end: { line: number; column: number };
+                });
+
+              context.report({
+                loc: reportLoc,
+                messageId: 'noComments'
+              });
+            });
+          }
+        };
+      }
+    }
+  }
+};
 
 const hardlintConfig = [
   {
@@ -10,7 +70,7 @@ const hardlintConfig = [
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: {
-      '@typescript-eslint': tseslint
+      hardlint: hardlintPlugin
     },
     languageOptions: {
       parser: tsparser,
@@ -44,6 +104,7 @@ const hardlintConfig = [
           location: 'anywhere'
         }
       ],
+      'hardlint/no-comments': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
       'prefer-arrow-callback': 'error',
