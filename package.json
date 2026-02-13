@@ -39,14 +39,14 @@
   "author": "naylsonferreira",
   "license": "MIT",
   "peerDependencies": {
-    "@commitlint/cli": ">=20.0.0",
-    "@commitlint/config-conventional": ">=20.0.0",
     "eslint": ">=8.56.0",
     "typescript": ">=5.0.0"
   },
-  "devDependencies": {
+  "dependencies": {
     "@commitlint/cli": "^20.4.1",
-    "@commitlint/config-conventional": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1"
+  },
+  "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@types/eslint": "^8.56.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
