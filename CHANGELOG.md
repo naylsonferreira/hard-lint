@@ -15,6 +15,17 @@ e este projeto segue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.4.1] - 2026-02-13
+
+### Fixed
+
+- Hooks agora usam JavaScript wrappers para garantir exit codes corretos no Windows
+- `pre-commit.js` agora executa lint-staged com propagação de status
+- `commit-msg.js` agora recebe corretamente o arquivo de mensagem de commit
+- Removidos shells scripts diretos em favor de Node.js wrappers mais portáveis
+
+---
+
 ## [0.4.0] - 2026-02-13
 
 ### Added
