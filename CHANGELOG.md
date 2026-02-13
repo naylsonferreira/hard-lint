@@ -11,15 +11,29 @@ e este projeto segue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Configuração inicial do projeto
-- Regras rigorosas de TypeScript
-- Suporte a ESLint 9
-- Configuração para testes E2E
-- Suporte a Next.js
-- Seletores semânticos obrigatórios em testes Playwright
-- Proibição de qualquer console.*
-- Proibição de comentários
-- Documentação completa
+- Scripts de release automático (npm run release:*)
+- GitHub Actions workflow para publicação automática no npm
+- PeerDependencies para commitlint no hard-lint
+
+### Changed
+
+- Atualizado README com documentação completa de pre-commit e commitlint
+- Removido husky do blacksmith-admin (hard-lint gerencia os hooks nativamente)
+
+---
+
+## [0.3.0] - 2026-02-12
+
+### Added
+
+- PeerDependencies para commitlint
+- Documentação explícita de pre-commit hooks
+- Sincronização automática de versão entre git e npm
+
+### Changed
+
+- Atualizado hard-lint de 0.2.2 para 0.3.0
+- README com seção melhorada sobre git hooks automáticos
 
 ---
 
