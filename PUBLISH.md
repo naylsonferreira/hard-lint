@@ -10,7 +10,28 @@ Este documento descreve como publicar o `hard-lint` no NPM Registry.
 
 ## Passos para Publicação
 
-### 1. Autenticação no NPM
+### Forma Rápida (Recomendado)
+
+Use um dos scripts de release que sincronizam automaticamente `package.json`, git tag e npm:
+
+```bash
+# Para patch release (0.3.0 -> 0.3.1)
+npm run release:patch
+
+# Para minor release (0.3.0 -> 0.4.0)
+npm run release:minor
+
+# Para major release (0.3.0 -> 1.0.0)
+npm run release:major
+```
+
+**O que acontece automaticamente:**
+1. ✅ `npm version <type>` - Atualiza `package.json` e cria git tag
+2. ✅ `npm run build` - Compila TypeScript
+3. ✅ `npm publish` - Publica no npm
+4. ✅ Git commit + tag são enviados para origin (você precisa fazer `git push origin main --tags`)
+
+### Forma Manual (Detalhada)
 
 ```bash
 npm login

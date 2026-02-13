@@ -19,26 +19,67 @@
 ## Instalação
 
 ```bash
-npm install --save-dev hard-lint eslint typescript
+npm install --save-dev \
+  hard-lint \
+  eslint \
+  typescript \
+  @commitlint/cli \
+  @commitlint/config-conventional
 ```
+
+### Dependências Obrigatórias
+
+| Pacote | Versão | Propósito |
+|--------|--------|----------|
+| `eslint` | >= 9.0.0 | Motor de linting |
+| `typescript` | >= 5.0.0 | Suporte a TypeScript |
+| `@commitlint/cli` | >= 20.0.0 | Validação de mensagens de commit |
+| `@commitlint/config-conventional` | >= 20.0.0 | Config de Conventional Commits |
+
+**Nota:** Todas as dependências acima são obrigatórias para o hard-lint funcionar corretamente (incluindo pre-commit e validação de commits).
 
 ## Requisitos
 
 - **Node.js** >= 18.0.0
 - **npm** >= 9.0.0
-- **ESLint** >= 9.0.0
-- **TypeScript** >= 5.0.0
+- **ESLint** >= 9.0.0 (peerDependency)
+- **TypeScript** >= 5.0.0 (peerDependency)
+- **@commitlint/cli** >= 20.0.0 (peerDependency, obrigatório para pre-commit)
+- **@commitlint/config-conventional** >= 20.0.0 (peerDependency, obrigatório para pre-commit)
 
 ## O que Está Incluído
 
 - ✅ **eslint.config.mjs** - Configuração ESLint 9 flat config
 - ✅ **20+ regras rigorosas** - TypeScript, console, comentários, segurança
-- ✅ **Pre-commit hooks** - Husky + lint-staged para validação automática
-- ✅ **Commit validation** - Commitlint com Conventional Commits
+- ✅ **Pre-commit hooks** - Validação automática de código antes de commits (requer `@commitlint/*`)
+- ✅ **Commit message validation** - Commitlint com Conventional Commits obrigatório
 - ✅ **Tipos TypeScript** - Para customizações
 - ✅ **Documentação completa** - README, guias de contribuição
 
 ## Uso Rápido
+
+### ⚠️ Instalação Mínima (Apenas ESLint)
+
+```bash
+npm install --save-dev hard-lint eslint typescript
+```
+
+Usa apenas validação de código ESLint manual.
+
+### ✅ Instalação Completa (Com Pre-Commit + Commitlint)
+
+```bash
+npm install --save-dev \
+  hard-lint \
+  eslint \
+  typescript \
+  @commitlint/cli \
+  @commitlint/config-conventional
+```
+
+Ativa validação automática de código e commits nos git hooks.
+
+**Recomendado:** Use a instalação completa para aproveitar o pre-commit automático.
 
 ### Em `eslint.config.mjs`:
 
@@ -140,52 +181,110 @@ npm run lint        # Lint este projeto
 npm run type-check  # Type check
 ```
 
-## Git Hooks (Husky + Commitlint)
+## Git Hooks Automáticos (Pre-Commit + Commitlint)
 
-Este projeto usa **Husky** + **lint-staged** + **commitlint** para validar código e commits:
+O `hard-lint` **configura automaticamente** os git hooks para validação em dois momentos:
 
-### Pre-Commit Hook
+### 🎯 Pre-Commit Hook
 
-Executado **automaticamente** antes de cada commit:
+**Executado** quando você roda `git commit` (antes da mensagem de commit)
 
+**Valida:**
+- ✅ ESLint - Codigo TypeScript (proíbe `any`, `console`, comentários, etc)
+- ✅ E2E Selectors - Testes Playwright com seletores semânticos
+- ✅ JSDoc - Valida ausência de comentários
+
+**Comportamento:**
 ```bash
-git add .
-git commit -m "feat: adiciona nova feature"
-# ↓ Valida automaticamente
-# - Roda ESLint (proíbe comentários, console, etc)
-# - Detecta e bloqueia violations
+$ git add .
+$ git commit -m "feat: nova feature"
+# ↓ Hard-Lint executa automaticamente:
+# [1/2] eslint . --fix       ✅ ou ❌
+# [2/2] validate-e2e         ✅ ou ❌
 ```
 
 **Se houver erro:**
 - ❌ Commit é bloqueado
-- 📋 Erro é exibido
-- 🔧 Corrija o código antes de committar
+- 📋 Erro é exibido com detalhes
+- 🔧 Corrija o código e tente novamente
 
-### Commit-Msg Hook
+**Exemplo de erro:**
+```
+❌ ESLint Error
+  src/utils/api.ts:15:5 - no-console
+    Unexpected console statement
 
-Valida o **formato da mensagem**:
-
-```bash
-# ✅ Formato correto (max 100 chars)
-git commit -m "feat: add new validation rule"
-
-# ❌ Formato inválido
-git commit -m "blablabla"
+Fix the issues and commit again.
 ```
 
-**Tipos permitidos:**
-- `feat` - Nova feature
-- `fix` - Bug fix
-- `docs` - Documentação
-- `style` - Formatação
-- `refactor` - Refatoração
-- `perf` - Performance
-- `test` - Testes
-- `chore` - Manutenção
-- `revert` - Revert
-- `ci` - CI/CD
+### 📝 Commit-Msg Hook
 
-Veja [PRE_COMMIT.md](./PRE_COMMIT.md) para documentação completa.
+**Executado** quando você tenta fazer commit (valida a mensagem)
+
+**Valida:**
+- ✅ Tipo obrigatório (`feat`, `fix`, `docs`, etc)
+- ✅ Escopo recomendado (ex: `feat(auth)`)
+- ✅ Descrição máx 100 caracteres
+- ✅ Sem ponto final na descrição
+
+**Formatos válidos:**
+```bash
+feat: add user authentication          # ✅ Simples
+feat(auth): add user authentication    # ✅ Com escopo
+fix(api): resolve token expiration     # ✅ Bug fix
+docs: update README                    # ✅ Documentação
+```
+
+**Formatos inválidos:**
+```bash
+blablabla                              # ❌ Sem tipo
+feat adicionar feature                 # ❌ Sem dois-pontos
+feat: add new feature.                 # ❌ Ponto final
+feat(): add feature                    # ❌ Escopo vazio
+```
+
+### Como Funciona
+
+1. **Primeira vez** que instala hard-lint:
+   ```bash
+   npm install --save-dev hard-lint @commitlint/cli @commitlint/config-conventional
+   npm run build  # se hard-lint for desenvolvido localmente
+   ```
+
+2. **Hooks são criados automaticamente** em `.git/hooks/`
+
+3. **Próximos commits** executam validação automática
+
+### Desabilitar Temporariamente
+
+Para bypassar hooks em emergência:
+```bash
+git commit --no-verify -m "seu mensagem aqui"
+```
+
+⚠️ **Não use em produção!**
+
+### Dependências Necessárias
+
+Para o pre-commit e commitlint funcionarem:
+
+```bash
+npm install --save-dev \
+  @commitlint/cli \
+  @commitlint/config-conventional
+```
+
+Se remover estas dependências, os hooks falharão com `Command not found`.
+
+### Configuração de Commitlint
+
+Se o proyecto tiver um arquivo `.commitlintrc.json`, use:
+
+```json
+{
+  "extends": ["@commitlint/config-conventional"]
+}
+```
 
 ## Configuração Avançada
 

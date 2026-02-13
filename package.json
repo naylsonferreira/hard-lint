@@ -24,7 +24,10 @@
     "type-check": "tsc --noEmit",
     "validate-e2e": "node scripts/validate-e2e-selectors.js",
     "validate-jsdoc": "node scripts/validate-no-jsdoc.js",
-    "prepare": "npm run build && husky install"
+    "prepare": "npm run build && husky install",
+    "release:patch": "npm version patch && npm run build && npm publish",
+    "release:minor": "npm version minor && npm run build && npm publish",
+    "release:major": "npm version major && npm run build && npm publish"
   },
   "keywords": [
     "eslint",
