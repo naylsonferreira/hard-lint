@@ -33,61 +33,63 @@ if (!fs.existsSync(path.join(projectRoot, 'package.json'))) {
 console.log('[OK] Git repository detected');
 console.log('[OK] package.json found\n');
 
-// 3. Create .hardlint directory
+// 3. Setup Husky infrastructure in .hardlint/_ directory
+console.log('[...] Setting up Husky in .hardlint...');
+try {
+  // Create .hardlint/_ directory for Husky hooks and support files
+  const hardlintHooksDir = path.join(projectRoot, '.hardlint', '_');
+  fs.mkdirSync(hardlintHooksDir, { recursive: true });
+  
+  // Create .hardlint/.gitignore (ignores everything in _/ directory)
+  fs.writeFileSync(path.join(projectRoot, '.hardlint', '.gitignore'), '*');
+  
+  // Copy Husky's core helper file
+  const huskyHelperSrc = path.join(hardlintRoot, 'node_modules', 'husky', 'husky');
+  const huskyHelperDest = path.join(hardlintHooksDir, 'h');
+  
+  if (fs.existsSync(huskyHelperSrc)) {
+    fs.copyFileSync(huskyHelperSrc, huskyHelperDest);
+    fs.chmodSync(huskyHelperDest, '755');
+  } else {
+    // Minimal fallback if husky file doesn't exist
+    const fallbackHusky = `#!/bin/sh\n. "$(dirname "$0")/../../node_modules/husky/husky"\n`;
+    fs.writeFileSync(huskyHelperDest, fallbackHusky, { mode: 0o755 });
+  }
+  
+  // Configure Git to use .hardlint/_ as hooks path
+  execSync('git config core.hooksPath .hardlint/_', { cwd: projectRoot, stdio: 'pipe' });
+  
+  console.log('[OK] Husky infrastructure configured\n');
+} catch (error) {
+  console.error('[ERROR] Failed to setup Husky:', error.message);
+  console.error(error.stack);
+  process.exit(1);
+}
+
+// 4. Ensure .hardlint directory exists
 if (!fs.existsSync(hardLintDir)) {
   fs.mkdirSync(hardLintDir, { recursive: true });
-  console.log('[OK] .hardlint directory created');
 }
 
-// 4. Create pre-commit hook
-const preCommitContent = `#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+// 5. Create pre-commit hook as shell wrapper to Node.js
+// NOTE: Hooks are created in .hardlint/_ (the hooks path)
+const hooksDir = path.join(hardLintDir, '_');
+const preCommitJsPath = path.join(hardlintRoot, 'scripts', 'hooks', 'pre-commit.js');
+const preCommitContent = `#!/bin/sh\nnode "${preCommitJsPath}"\n`;
 
-npx lint-staged
-`;
-
-const preCommitPath = path.join(hardLintDir, 'pre-commit');
-fs.writeFileSync(preCommitPath, preCommitContent);
-fs.chmodSync(preCommitPath, '755');
+const preCommitPath = path.join(hooksDir, 'pre-commit');
+fs.writeFileSync(preCommitPath, preCommitContent, { encoding: 'utf8' });
+fs.chmodSync(preCommitPath, 0o755);
 console.log('[OK] pre-commit hook created');
 
-// 5. Create commit-msg hook
-const commitMsgContent = `#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+// 6. Create commit-msg hook as shell wrapper to Node.js
+const commitMsgJsPath = path.join(hardlintRoot, 'scripts', 'hooks', 'commit-msg.js');
+const commitMsgContent = `#!/bin/sh\nnode "${commitMsgJsPath}" "$@"\n`;
 
-npx commitlint --edit "$1" --config "${hardlintRoot}/commitlint.config.cjs"
-`;
-
-const commitMsgPath = path.join(hardLintDir, 'commit-msg');
-fs.writeFileSync(commitMsgPath, commitMsgContent);
-fs.chmodSync(commitMsgPath, '755');
+const commitMsgPath = path.join(hooksDir, 'commit-msg');
+fs.writeFileSync(commitMsgPath, commitMsgContent, { encoding: 'utf8' });
+fs.chmodSync(commitMsgPath, 0o755);
 console.log('[OK] commit-msg hook created\n');
-
-// 6. Configure Git to use .hardlint directory
-console.log('[...] Configuring Git hooks path...');
-try {
-  execSync(`git config core.hooksPath .hardlint`, { cwd: projectRoot, stdio: 'pipe' });
-  console.log('[OK] Git configured to use .hardlint\n');
-} catch (error) {
-  console.error('[ERROR] Failed to configure Git:', error.message);
-  process.exit(1);
-}
-
-// 7. Install Husky
-console.log('[...] Installing Husky...');
-try {
-  const hardlintHuskyBin = path.join(hardlintRoot, 'node_modules', 'husky', 'bin.js');
-  
-  if (fs.existsSync(hardlintHuskyBin)) {
-    execSync(`node ${hardlintHuskyBin} install`, { cwd: projectRoot, stdio: 'pipe' });
-  } else {
-    execSync('npx husky install', { cwd: projectRoot, stdio: 'pipe' });
-  }
-  console.log('[OK] Husky installed\n');
-} catch (error) {
-  console.error('[ERROR] Failed to install Husky:', error.message);
-  process.exit(1);
-}
 
 // 8. Create lint-staged config in package.json if not exists
 const packageJsonPath = path.join(projectRoot, 'package.json');
