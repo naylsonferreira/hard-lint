@@ -40,7 +40,7 @@ yarn add --dev \
 
 ## Requisitos
 
-- **Node.js** >= 18.0.0
+- **Node.js** >= 20.0.0
 - **Yarn** >= 1.22.0
 - **ESLint** >= 9.0.0 (peerDependency)
 - **TypeScript** >= 5.0.0 (peerDependency)
