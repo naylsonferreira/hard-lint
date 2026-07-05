@@ -27,10 +27,16 @@ Portadas as regras equivalentes do `hard-lint-py` (Python) para o TypeScript.
 - **Comando `verify`** (`npm run verify`), equivalente ao `verify` do Python: roda config lockdown + install status + eslint + barrel + testes (`npm test`, se existir).
 - **Globals de browser/node/es2021** declarados no preset (via pacote `globals`), melhorando a análise de escopo (`window`, `fetch`, `FormData`, `URLSearchParams`, `setTimeout`, etc.).
 
+- **Estende o `typescript-eslint/recommended`** (baseline da comunidade) via meta-pacote `typescript-eslint`, em vez de catar regras à mão. Traz o conjunto TS-específico padrão (`no-non-null-assertion`, `ban-ts-comment`, `no-unsafe-function-type`, `no-empty-object-type`, etc.) e acompanha a evolução do plugin.
+- **Preset opcional type-checked** (`export { typeChecked }`): estende `recommendedTypeChecked` com `projectService` ligado, habilitando linting com informação de tipo (`no-floating-promises`, `no-misused-promises`, `await-thenable`, `only-throw-error`). Uso: `import { typeChecked } from 'hard-lint'`.
+- `eqeqeq` (`always`, ignorando `== null`), `no-throw-literal` e `no-param-reassign` (`{ props: false }`) adicionados ao preset base.
+- Globals aplicados também a `.cjs`/`.mjs` (arquivos de config CommonJS).
+
 ### Fixed
 
 - `no-undef` desligado (o compilador TypeScript já cobre nomes indefinidos; evita falsos-positivos com o JSX automatic runtime — `React` — e tipos do lib DOM como `RequestInit`), seguindo a recomendação do typescript-eslint.
 - `no-unused-vars` (base) desligado em favor de `@typescript-eslint/no-unused-vars`, evitando relatório duplicado.
+- Regra custom `no-comments` migrada de `context.getSourceCode()` (depreciado no ESLint 9) para `context.sourceCode`.
 
 ### Changed
 

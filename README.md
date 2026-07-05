@@ -89,7 +89,23 @@ import hardlint from 'hard-lint';
 export default [...hardlint];
 ```
 
+O preset base estende o `typescript-eslint/recommended` (baseline da comunidade) e **não** exige informação de tipo — funciona zero-config.
+
+### Modo type-checked (opcional, com informação de tipo)
+
+Para habilitar as regras type-aware mais rigorosas (`no-floating-promises`, `no-misused-promises`, `await-thenable`, `only-throw-error`), use o preset `typeChecked`. Ele liga o `projectService`, então basta ter um `tsconfig.json` no projeto:
+
+```javascript
+import { typeChecked } from 'hard-lint';
+
+export default [...typeChecked];
+```
+
+> Use **um** dos dois: `hardlint` (padrão, sem type info) **ou** `typeChecked` (mais lento, exige `tsconfig`). O `typeChecked` já inclui todas as regras do preset base.
+
 ## Regras Implementadas
+
+O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras abaixo por cima.
 
 ### 📋 TypeScript
 
@@ -114,6 +130,9 @@ export default [...hardlint];
 | `prefer-const` | ❌ Error | Use `const` sempre que possível |
 | `prefer-arrow-callback` | ❌ Error | Prefira arrow functions em callbacks |
 | `no-nested-ternary` | ❌ Error | Proíbe ternários aninhados |
+| `eqeqeq` | ❌ Error | Exige `===`/`!==` (ignora `== null`) |
+| `no-throw-literal` | ❌ Error | `throw` só de objetos `Error` |
+| `no-param-reassign` | ❌ Error | Não reatribui parâmetros |
 | `complexity` | ❌ Error | Máximo 10 de complexidade ciclomática |
 | `max-depth` | ❌ Error | Máximo 3 níveis de aninhamento |
 | `max-nested-callbacks` | ❌ Error | Máximo 3 callbacks aninhados |
