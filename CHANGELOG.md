@@ -11,6 +11,14 @@ e este projeto segue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.5.1] - 2026-07-05
+
+### Added
+
+- **Preset `composable`** (`export { composable }`): variante que **não registra** o plugin `@typescript-eslint`, para compor com configs que já o registram (ex.: `eslint-config-next`). Evita o erro `Cannot redefine plugin "@typescript-eslint"` do flat config. As regras `@typescript-eslint/*` continuam ativas, resolvidas pelo plugin do host. Mantém a camada `@stylistic`, o `hardlint/no-comments` e os validadores. Uso: `import { composable } from 'hard-lint'` e componha após o preset do framework.
+
+---
+
 ## [0.5.0] - 2026-07-05
 
 Conjunto de regras rigorosas e validações estruturais para projetos TypeScript.

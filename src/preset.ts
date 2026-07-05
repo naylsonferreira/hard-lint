@@ -226,4 +226,13 @@ export const strictTypeChecked = [
   typeCheckedLayer,
 ];
 
+const composableTsConfigs = tseslint.configs.recommended.filter((config) => {
+  const registersTsPlugin = (config as { plugins?: Record<string, unknown> }).plugins?.[
+    '@typescript-eslint'
+  ];
+  return !registersTsPlugin;
+});
+
+export const composable = buildConfig(composableTsConfigs);
+
 export default hardlintConfig;

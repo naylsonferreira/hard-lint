@@ -117,6 +117,25 @@ export default [...typeChecked];
 > export default [...strict];
 > ```
 
+### Compondo com outro config (ex.: Next.js)
+
+O preset padrão registra o plugin `@typescript-eslint`. Se você compõe o hard-lint com um config que **já registra** esse plugin (como o `eslint-config-next`), o flat config aborta com `Cannot redefine plugin "@typescript-eslint"`. Para esse caso use o export **`composable`**, que não registra o plugin (deixa o host registrar) e mantém todas as regras, a formatação e os validadores:
+
+```javascript
+import { defineConfig } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
+import { composable } from 'hard-lint';
+
+export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  ...composable,
+]);
+```
+
+> O `composable` assume que o config base já registra o `@typescript-eslint` (o Next registra). Usado sozinho, sem um host que registre o plugin, as regras `@typescript-eslint/*` não resolvem.
+
 ## Regras Implementadas
 
 O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras abaixo por cima.
