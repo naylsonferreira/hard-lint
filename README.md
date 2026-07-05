@@ -16,6 +16,8 @@
 - ✅ **Manutenibilidade** - Limites de complexidade, sintaxe consistente
 - ✅ **Segurança** - Evita eval, scripts dinâmicos
 
+> Inspirado no espírito rigoroso e zero-config de um linter irmão que criamos para Python.
+
 ## Instalação
 
 ```bash
@@ -150,13 +152,13 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 | `max-depth` | ❌ Error | Máximo 3 níveis de aninhamento |
 | `max-nested-callbacks` | ❌ Error | Máximo 3 callbacks aninhados |
 
-### 🔤 Nomenclatura (equivalente a ruff `N` / pep8-naming)
+### 🔤 Nomenclatura
 
 | Regra | Severidade | Config |
 |-------|-----------|--------|
 | `@typescript-eslint/naming-convention` | ❌ Error | PascalCase para tipos/interfaces, camelCase para variáveis/funções, UPPER_CASE para constantes, PascalCase/UPPER_CASE para enums |
 
-### ✨ Modernização de Sintaxe (equivalente a ruff `UP` / pyupgrade)
+### ✨ Modernização de Sintaxe
 
 | Regra | Severidade | Config |
 |-------|-----------|--------|
@@ -168,7 +170,7 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 | `no-useless-concat` / `no-useless-rename` / `no-useless-computed-key` | ❌ Error | Remove construções redundantes |
 | `dot-notation` | ❌ Error | `obj.prop` em vez de `obj['prop']` |
 
-### 🐛 Correção / Bugs de Design (equivalente a ruff `B` / flake8-bugbear)
+### 🐛 Correção / Bugs de Design
 
 | Regra | Severidade | Config |
 |-------|-----------|--------|
@@ -181,7 +183,7 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 | `no-template-curly-in-string` | ❌ Error | `${}` em string comum (esqueceu a template) |
 | `@typescript-eslint/no-shadow` | ❌ Error | Proíbe shadowing de variáveis |
 
-### 📦 Ordenação de Imports (equivalente a ruff `I` / isort)
+### 📦 Ordenação de Imports
 
 | Regra | Severidade | Config |
 |-------|-----------|--------|
@@ -189,7 +191,7 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 | `simple-import-sort/exports` | ❌ Error | Ordena os re-exports |
 | `import-x/no-duplicates` | ❌ Error | Proíbe imports duplicados do mesmo módulo |
 
-### 🎨 Formatação (`@stylistic`, filosofia black/isort do hard-lint-py)
+### 🎨 Formatação (`@stylistic`)
 
 Como o Prettier é proibido pelo config lockdown, o hard-lint **provê** a formatação (perfil opinativo, tudo auto-fixável):
 
@@ -233,15 +235,15 @@ yarn validate-e2e [arquivos...]
 
 **Objetivo:** Testes que clicam em **palavras**, não em divs. Seletores que representam o que o usuário vê e interage.
 
-### 🗂️ Validadores de Projeto (portados do `hard-lint-py`)
+### 🗂️ Validadores de Projeto
 
 Além das regras de ESLint, o `hard-lint` aplica validações estruturais no nível do projeto:
 
-| Validador | Equivalente Python | O que faz |
-|-----------|--------------------|-----------|
-| **Config lockdown** | `check_lint_config_override` | Rejeita config de lint/format concorrente (`.eslintrc*`, `.prettierrc*`, `.eslintignore`, chaves `prettier`/`eslintConfig` no `package.json`). O `hard-lint` gerencia toda a config. Roda no `pre-commit`. |
-| **Install status** | `check_install_status` | Garante que os hooks estão instalados e `core.hooksPath` aponta para `.hardlint/_`. |
-| **Barrel exports** | `empty-init` | Arquivos `index.*` só podem re-exportar (sem lógica/declarações de valor). Roda no lint-staged. |
+| Validador | O que faz |
+|-----------|-----------|
+| **Config lockdown** | Rejeita config de lint/format concorrente (`.eslintrc*`, `.prettierrc*`, `.eslintignore`, chaves `prettier`/`eslintConfig` no `package.json`). O `hard-lint` gerencia toda a config. Roda no `pre-commit`. |
+| **Install status** | Garante que os hooks estão instalados e `core.hooksPath` aponta para `.hardlint/_`. |
+| **Barrel exports** | Arquivos `index.*` só podem re-exportar (sem lógica/declarações de valor). Roda no lint-staged. |
 
 **Rodar manualmente:**
 ```bash
@@ -250,7 +252,7 @@ yarn validate-install
 yarn validate-barrel [arquivos...]
 ```
 
-### ✅ `verify` — portão completo (equivalente ao `verify` do Python)
+### ✅ `verify` — portão completo
 
 Roda tudo em sequência e falha no primeiro erro: config lockdown → install status → `eslint .` → barrel → `yarn test` (se houver script de teste).
 
