@@ -1,6 +1,8 @@
 import js from '@eslint/js';
-import type { Rule } from 'eslint';
+import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
+import type { Rule } from 'eslint';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const hardlintPlugin = {
   rules: {
@@ -35,7 +37,6 @@ const hardlintPlugin = {
             comments.forEach((comment: CommentLike) => {
               const value = comment.value.trim();
               
-              // Only allow ESLint directives
               if (directivePattern.test(value)) {
                 return;
               }
@@ -70,7 +71,9 @@ const hardlintConfig = [
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: {
-      hardlint: hardlintPlugin
+      hardlint: hardlintPlugin,
+      '@typescript-eslint': tseslint,
+      'simple-import-sort': simpleImportSort
     },
     languageOptions: {
       parser: tsparser,
@@ -116,13 +119,45 @@ const hardlintConfig = [
       'no-implied-eval': 'error',
       'no-new-func': 'error',
       'no-script-url': 'error',
-      'sort-imports': [
+
+      '@typescript-eslint/naming-convention': [
         'error',
-        {
-          ignoreCase: true,
-          ignoreMemberSort: true
-        }
-      ]
+        { selector: 'default', format: ['camelCase'], leadingUnderscore: 'allow' },
+        { selector: 'variable', format: ['camelCase', 'UPPER_CASE', 'PascalCase'], leadingUnderscore: 'allow' },
+        { selector: 'function', format: ['camelCase', 'PascalCase'] },
+        { selector: 'parameter', format: ['camelCase'], leadingUnderscore: 'allow' },
+        { selector: 'typeLike', format: ['PascalCase'] },
+        { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE'] },
+        { selector: 'import', format: ['camelCase', 'PascalCase'] },
+        { selector: ['objectLiteralProperty', 'objectLiteralMethod', 'typeProperty'], format: null }
+      ],
+
+      'prefer-template': 'error',
+      'object-shorthand': ['error', 'always'],
+      'prefer-destructuring': ['error', { object: true, array: false }],
+      'prefer-spread': 'error',
+      'prefer-rest-params': 'error',
+      'prefer-exponentiation-operator': 'error',
+      'no-useless-concat': 'error',
+      'no-useless-rename': 'error',
+      'no-useless-computed-key': 'error',
+      'dot-notation': 'error',
+
+      'no-await-in-loop': 'error',
+      'array-callback-return': 'error',
+      'require-atomic-updates': 'error',
+      'no-unmodified-loop-condition': 'error',
+      'no-constant-binary-expression': 'error',
+      'no-self-compare': 'error',
+      'no-unreachable-loop': 'error',
+      'no-promise-executor-return': 'error',
+      'no-template-curly-in-string': 'error',
+      'no-shadow': 'off',
+      '@typescript-eslint/no-shadow': 'error',
+
+      'sort-imports': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error'
     }
   }
 ];

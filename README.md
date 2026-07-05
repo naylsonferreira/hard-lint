@@ -114,10 +114,47 @@ export default [...hardlint];
 | `prefer-const` | ❌ Error | Use `const` sempre que possível |
 | `prefer-arrow-callback` | ❌ Error | Prefira arrow functions em callbacks |
 | `no-nested-ternary` | ❌ Error | Proíbe ternários aninhados |
-| `sort-imports` | ❌ Error | Imports devem estar ordenados |
 | `complexity` | ❌ Error | Máximo 10 de complexidade ciclomática |
 | `max-depth` | ❌ Error | Máximo 3 níveis de aninhamento |
 | `max-nested-callbacks` | ❌ Error | Máximo 3 callbacks aninhados |
+
+### 🔤 Nomenclatura (equivalente a ruff `N` / pep8-naming)
+
+| Regra | Severidade | Config |
+|-------|-----------|--------|
+| `@typescript-eslint/naming-convention` | ❌ Error | PascalCase para tipos/interfaces, camelCase para variáveis/funções, UPPER_CASE para constantes, PascalCase/UPPER_CASE para enums |
+
+### ✨ Modernização de Sintaxe (equivalente a ruff `UP` / pyupgrade)
+
+| Regra | Severidade | Config |
+|-------|-----------|--------|
+| `prefer-template` | ❌ Error | Template literals em vez de concatenação |
+| `object-shorthand` | ❌ Error | Shorthand de objetos |
+| `prefer-destructuring` | ❌ Error | Desestruturação de objetos |
+| `prefer-spread` / `prefer-rest-params` | ❌ Error | Spread/rest em vez de `apply`/`arguments` |
+| `prefer-exponentiation-operator` | ❌ Error | `**` em vez de `Math.pow` |
+| `no-useless-concat` / `no-useless-rename` / `no-useless-computed-key` | ❌ Error | Remove construções redundantes |
+| `dot-notation` | ❌ Error | `obj.prop` em vez de `obj['prop']` |
+
+### 🐛 Correção / Bugs de Design (equivalente a ruff `B` / flake8-bugbear)
+
+| Regra | Severidade | Config |
+|-------|-----------|--------|
+| `no-await-in-loop` | ❌ Error | Evita `await` sequencial em loop |
+| `array-callback-return` | ❌ Error | Callbacks de array devem retornar |
+| `require-atomic-updates` | ❌ Error | Evita race em atribuição após `await` |
+| `no-unmodified-loop-condition` | ❌ Error | Condição de loop nunca modificada |
+| `no-constant-binary-expression` | ❌ Error | Expressão booleana constante |
+| `no-self-compare` / `no-unreachable-loop` / `no-promise-executor-return` | ❌ Error | Bugs de lógica comuns |
+| `no-template-curly-in-string` | ❌ Error | `${}` em string comum (esqueceu a template) |
+| `@typescript-eslint/no-shadow` | ❌ Error | Proíbe shadowing de variáveis |
+
+### 📦 Ordenação de Imports (equivalente a ruff `I` / isort)
+
+| Regra | Severidade | Config |
+|-------|-----------|--------|
+| `simple-import-sort/imports` | ❌ Error | Ordena as declarações de import por grupos |
+| `simple-import-sort/exports` | ❌ Error | Ordena os re-exports |
 
 ### 🔒 Segurança
 
@@ -147,6 +184,31 @@ npm run validate-e2e [arquivos...]
 **Automático no pre-commit:** Valida todos os `.e2e.ts` e `.test.ts` antes de commitar.
 
 **Objetivo:** Testes que clicam em **palavras**, não em divs. Seletores que representam o que o usuário vê e interage.
+
+### 🗂️ Validadores de Projeto (portados do `hard-lint-py`)
+
+Além das regras de ESLint, o `hard-lint` aplica validações estruturais no nível do projeto:
+
+| Validador | Equivalente Python | O que faz |
+|-----------|--------------------|-----------|
+| **Config lockdown** | `check_lint_config_override` | Rejeita config de lint/format concorrente (`.eslintrc*`, `.prettierrc*`, `.eslintignore`, chaves `prettier`/`eslintConfig` no `package.json`). O `hard-lint` gerencia toda a config. Roda no `pre-commit`. |
+| **Install status** | `check_install_status` | Garante que os hooks estão instalados e `core.hooksPath` aponta para `.hardlint/_`. |
+| **Barrel exports** | `empty-init` | Arquivos `index.*` só podem re-exportar (sem lógica/declarações de valor). Roda no lint-staged. |
+
+**Rodar manualmente:**
+```bash
+npm run validate-config-override
+npm run validate-install
+npm run validate-barrel [arquivos...]
+```
+
+### ✅ `verify` — portão completo (equivalente ao `verify` do Python)
+
+Roda tudo em sequência e falha no primeiro erro: config lockdown → install status → `eslint .` → barrel → `npm test` (se houver script de teste).
+
+```bash
+npm run verify
+```
 
 ## Exemplos
 
@@ -179,6 +241,7 @@ npm run build       # Build da biblioteca
 npm run dev         # Watch mode
 npm run lint        # Lint este projeto
 npm run type-check  # Type check
+npm run verify      # Portão completo: config + install + eslint + barrel + testes
 ```
 
 ## Git Hooks Automáticos (Pre-Commit + Commitlint)
