@@ -37,6 +37,8 @@ function main() {
   const installStatus = path.join(__dirname, 'validate-install-status.js');
   const barrel = path.join(__dirname, 'validate-barrel-exports.js');
 
+  const usesYarn = fs.existsSync(path.join(projectRoot, 'yarn.lock'));
+
   const steps = [
     ['config lockdown', `node "${configOverride}"`],
     ['install status', `node "${installStatus}"`],
@@ -45,7 +47,7 @@ function main() {
   ];
 
   if (hasTestScript()) {
-    steps.push(['tests', 'npm test']);
+    steps.push(['tests', usesYarn ? 'yarn test' : 'npm test']);
   } else {
     console.log('\n[hard-lint] no test script found, skipping tests.');
   }

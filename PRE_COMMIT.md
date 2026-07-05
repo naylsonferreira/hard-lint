@@ -55,10 +55,10 @@ git commit -m "invalid message"
 ### Instalação
 
 ```bash
-npm install
+yarn install
 ```
 
-O Husky é instalado automaticamente no `npm install` (via `prepare` script).
+O Husky é instalado automaticamente no `yarn install` (via `prepare` script).
 
 ### Teste Manual
 

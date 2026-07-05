@@ -33,10 +33,10 @@
     "validate-config-override": "node scripts/validate-no-config-override.js",
     "validate-install": "node scripts/validate-install-status.js",
     "validate-barrel": "node scripts/validate-barrel-exports.js",
-    "prepare": "npm run build && husky install",
-    "release:patch": "npm version patch && npm run build && npm publish",
-    "release:minor": "npm version minor && npm run build && npm publish",
-    "release:major": "npm version major && npm run build && npm publish"
+    "prepare": "yarn build && husky install",
+    "release:patch": "yarn publish --patch",
+    "release:minor": "yarn publish --minor",
+    "release:major": "yarn publish --major"
   },
   "keywords": [
     "eslint",
@@ -70,7 +70,7 @@
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "yarn": ">=1.22.0"
   },
   "repository": {
     "type": "git",

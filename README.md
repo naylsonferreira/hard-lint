@@ -19,7 +19,7 @@
 ## Instalação
 
 ```bash
-npm install --save-dev \
+yarn add --dev \
   hard-lint \
   eslint \
   typescript \
@@ -41,7 +41,7 @@ npm install --save-dev \
 ## Requisitos
 
 - **Node.js** >= 18.0.0
-- **npm** >= 9.0.0
+- **Yarn** >= 1.22.0
 - **ESLint** >= 9.0.0 (peerDependency)
 - **TypeScript** >= 5.0.0 (peerDependency)
 - **@commitlint/cli** >= 20.0.0 (peerDependency, obrigatório para pre-commit)
@@ -61,7 +61,7 @@ npm install --save-dev \
 ### ⚠️ Instalação Mínima (Apenas ESLint)
 
 ```bash
-npm install --save-dev hard-lint eslint typescript
+yarn add --dev hard-lint eslint typescript
 ```
 
 Usa apenas validação de código ESLint manual.
@@ -69,7 +69,7 @@ Usa apenas validação de código ESLint manual.
 ### ✅ Instalação Completa (Com Pre-Commit + Commitlint)
 
 ```bash
-npm install --save-dev \
+yarn add --dev \
   hard-lint \
   eslint \
   typescript \
@@ -197,7 +197,7 @@ Validators customizados para garantir testes E2E que se comportam como usuários
 
 **Rodar manualmente:**
 ```bash
-npm run validate-e2e [arquivos...]
+yarn validate-e2e [arquivos...]
 ```
 
 **Automático no pre-commit:** Valida todos os `.e2e.ts` e `.test.ts` antes de commitar.
@@ -216,17 +216,17 @@ Além das regras de ESLint, o `hard-lint` aplica validações estruturais no ní
 
 **Rodar manualmente:**
 ```bash
-npm run validate-config-override
-npm run validate-install
-npm run validate-barrel [arquivos...]
+yarn validate-config-override
+yarn validate-install
+yarn validate-barrel [arquivos...]
 ```
 
 ### ✅ `verify` — portão completo (equivalente ao `verify` do Python)
 
-Roda tudo em sequência e falha no primeiro erro: config lockdown → install status → `eslint .` → barrel → `npm test` (se houver script de teste).
+Roda tudo em sequência e falha no primeiro erro: config lockdown → install status → `eslint .` → barrel → `yarn test` (se houver script de teste).
 
 ```bash
-npm run verify
+yarn verify
 ```
 
 ## Exemplos
@@ -256,11 +256,11 @@ const initializeUserCount = 0;
 ## Scripts
 
 ```bash
-npm run build       # Build da biblioteca
-npm run dev         # Watch mode
-npm run lint        # Lint este projeto
-npm run type-check  # Type check
-npm run verify      # Portão completo: config + install + eslint + barrel + testes
+yarn build       # Build da biblioteca
+yarn dev         # Watch mode
+yarn lint        # Lint este projeto
+yarn type-check  # Type check
+yarn verify      # Portão completo: config + install + eslint + barrel + testes
 ```
 
 ## Git Hooks Automáticos (Pre-Commit + Commitlint)
@@ -329,8 +329,8 @@ feat(): add feature                    # ❌ Escopo vazio
 
 1. **Primeira vez** que instala hard-lint:
    ```bash
-   npm install --save-dev hard-lint @commitlint/cli @commitlint/config-conventional
-   npm run build  # se hard-lint for desenvolvido localmente
+   yarn add --dev hard-lint @commitlint/cli @commitlint/config-conventional
+   yarn build  # se hard-lint for desenvolvido localmente
    ```
 
 2. **Hooks são criados automaticamente** em `.git/hooks/`
@@ -351,7 +351,7 @@ git commit --no-verify -m "seu mensagem aqui"
 Para o pre-commit e commitlint funcionarem:
 
 ```bash
-npm install --save-dev \
+yarn add --dev \
   @commitlint/cli \
   @commitlint/config-conventional
 ```
@@ -396,10 +396,11 @@ export default [
 
 ## Publicação no NPM
 
-1. Faça login: `npm login`
-2. Incremente versão: `npm version patch|minor|major`
-3. Build: `npm run build`
-4. Publique: `npm publish --access public`
+1. Faça login no registry: `npm login`
+2. Rode o release (bump + build + publish + tag): `yarn release:patch` (ou `:minor` / `:major`)
+3. Envie a tag: `git push origin main --tags`
+
+> Publicamos no NPM Registry, mas o gerenciador de pacotes do projeto é o **Yarn** (build/scripts/CI). `npm login` é usado só para autenticar no registry.
 
 ## Licença
 
