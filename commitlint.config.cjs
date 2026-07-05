@@ -14,12 +14,12 @@ module.exports = {
         'test',
         'chore',
         'revert',
-        'ci'
-      ]
+        'ci',
+      ],
     ],
     'subject-case': [2, 'never', ['start-case', 'pascal-case', 'upper-case']],
     'type-case': [2, 'always', 'lowercase'],
     'header-max-length': [2, 'always', 100],
-    'body-max-line-length': [2, 'always', 100]
-  }
+    'body-max-line-length': [2, 'always', 100],
+  },
 };

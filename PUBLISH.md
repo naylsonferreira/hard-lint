@@ -5,8 +5,8 @@ Este documento descreve como publicar o `hard-lint` no NPM Registry.
 ## Pré-requisitos
 
 - Conta NPM criada em https://www.npmjs.com
-- Node.js e npm instalados
-- Autenticação configurada no npm
+- Node.js e Yarn (>= 1.22) instalados
+- Autenticação configurada no npm (`npm login`) para publicar no registry
 
 ## Passos para Publicação
 
@@ -16,20 +16,20 @@ Use um dos scripts de release que sincronizam automaticamente `package.json`, gi
 
 ```bash
 # Para patch release (0.3.0 -> 0.3.1)
-npm run release:patch
+yarn release:patch
 
 # Para minor release (0.3.0 -> 0.4.0)
-npm run release:minor
+yarn release:minor
 
 # Para major release (0.3.0 -> 1.0.0)
-npm run release:major
+yarn release:major
 ```
 
-**O que acontece automaticamente:**
-1. ✅ `npm version <type>` - Atualiza `package.json` e cria git tag
-2. ✅ `npm run build` - Compila TypeScript
-3. ✅ `npm publish` - Publica no npm
-4. ✅ Git commit + tag são enviados para origin (você precisa fazer `git push origin main --tags`)
+**O que acontece automaticamente** (via `yarn publish --<type>`):
+1. ✅ Atualiza a versão no `package.json` e cria o git tag
+2. ✅ Roda o script `prepare` (`yarn build`) - Compila TypeScript
+3. ✅ Publica no npm registry
+4. ✅ Git commit + tag são criados (você precisa fazer `git push origin main --tags`)
 
 ### Forma Manual (Detalhada)
 
@@ -50,13 +50,13 @@ Atualize a versão em `package.json` seguindo [Semantic Versioning](https://semv
 
 ```bash
 # Para patch (0.1.0 -> 0.1.1)
-npm version patch
+yarn version --patch
 
 # Para minor (0.1.0 -> 0.2.0)
-npm version minor
+yarn version --minor
 
 # Para major (0.1.0 -> 1.0.0)
-npm version major
+yarn version --major
 ```
 
 Isso atualiza automaticamente `package.json` e cria um git tag.
@@ -68,7 +68,7 @@ Adicione uma nova seção no `CHANGELOG.md` com as mudanças na versão.
 ### 4. Build
 
 ```bash
-npm run build
+yarn build
 ```
 
 Verifique os arquivos em `dist/`:
@@ -156,7 +156,7 @@ Exemplos:
 Após publicação, usuários instalam com:
 
 ```bash
-npm install --save-dev hard-lint eslint typescript
+yarn add --dev hard-lint eslint typescript
 ```
 
 ---

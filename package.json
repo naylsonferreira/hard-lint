@@ -1,6 +1,6 @@
 {
   "name": "hard-lint",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Configuração rigorosa de ESLint para projetos TypeScript",
   "type": "module",
   "main": "dist/index.js",
@@ -27,12 +27,16 @@
     "install-hooks": "node scripts/install.js",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
+    "verify": "node scripts/verify.js",
     "validate-e2e": "node scripts/validate-e2e-selectors.js",
     "validate-jsdoc": "node scripts/validate-no-jsdoc.js",
-    "prepare": "npm run build && husky install",
-    "release:patch": "npm version patch && npm run build && npm publish",
-    "release:minor": "npm version minor && npm run build && npm publish",
-    "release:major": "npm version major && npm run build && npm publish"
+    "validate-config-override": "node scripts/validate-no-config-override.js",
+    "validate-install": "node scripts/validate-install-status.js",
+    "validate-barrel": "node scripts/validate-barrel-exports.js",
+    "prepare": "yarn build && husky install",
+    "release:patch": "yarn publish --patch",
+    "release:minor": "yarn publish --minor",
+    "release:major": "yarn publish --major"
   },
   "keywords": [
     "eslint",
@@ -50,20 +54,25 @@
   "dependencies": {
     "@commitlint/cli": "^20.4.1",
     "@commitlint/config-conventional": "^20.4.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
-  },
-  "devDependencies": {
     "@eslint/js": "^9.0.0",
-    "@types/eslint": "^8.56.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^17.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "typescript-eslint": "^8.62.1"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "typescript": "^5.3.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=20.0.0",
+    "yarn": ">=1.22.0"
   },
   "repository": {
     "type": "git",
@@ -77,6 +86,9 @@
     "**/*.{ts,tsx,js,jsx}": [
       "eslint --fix",
       "eslint"
+    ],
+    "**/index.{ts,tsx,js,jsx}": [
+      "node scripts/validate-barrel-exports.js"
     ],
     "**/*.{e2e,test}.{ts,tsx,js,jsx}": [
       "node scripts/validate-e2e-selectors.js"

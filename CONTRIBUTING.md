@@ -60,7 +60,7 @@ Sugestões de melhorias são bem-vindas! Ao criar uma solicitação de melhoria:
 1. Fork o repositório
 2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`)
 3. Faça suas mudanças
-4. Execute os testes (`npm run lint` e `npm run type-check`)
+4. Execute os testes (`yarn lint` e `yarn type-check`)
 5. Commit suas mudanças (`git commit -m 'Add: descrição'`)
 6. Push para a branch (`git push origin feature/minha-feature`)
 7. Abra um Pull Request
