@@ -1,5 +1,7 @@
 import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import type { Linter, Rule } from 'eslint';
+import importX from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -10,16 +12,16 @@ const hardlintPlugin = {
       meta: {
         type: 'problem',
         docs: {
-          description: 'Disallow comments except ESLint directives'
+          description: 'Disallow comments except ESLint directives',
         },
         schema: [],
         messages: {
-          noComments: 'Comments are not allowed.'
-        }
+          noComments: 'Comments are not allowed.',
+        },
       },
       create(context: Rule.RuleContext) {
-        const directivePattern =
-          /^eslint-(disable|enable|disable-next-line|disable-line)(\s|$)/;
+        const directivePattern
+          = /^eslint-(disable|enable|disable-next-line|disable-line)(\s|$)/;
         type CommentLike = {
           type: 'Line' | 'Block';
           value: string;
@@ -41,26 +43,26 @@ const hardlintPlugin = {
                 return;
               }
 
-              const reportLoc =
-                comment.loc ??
-                ({
-                  start: { line: 1, column: 0 },
-                  end: { line: 1, column: 0 }
-                } as {
-                  start: { line: number; column: number };
-                  end: { line: number; column: number };
-                });
+              const reportLoc
+                = comment.loc
+                  ?? ({
+                    start: { line: 1, column: 0 },
+                    end: { line: 1, column: 0 },
+                  } as {
+                    start: { line: number; column: number };
+                    end: { line: number; column: number };
+                  });
 
               context.report({
                 loc: reportLoc,
-                messageId: 'noComments'
+                messageId: 'noComments',
               });
             });
-          }
+          },
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 const hardlintRules: Linter.RulesRecord = {
@@ -71,27 +73,42 @@ const hardlintRules: Linter.RulesRecord = {
     'error',
     {
       argsIgnorePattern: '^_',
-      varsIgnorePattern: '^_'
-    }
+      varsIgnorePattern: '^_',
+    },
   ],
   'no-console': 'error',
-  eqeqeq: ['error', 'always', { null: 'ignore' }],
+  'eqeqeq': ['error', 'always', { null: 'ignore' }],
   'no-throw-literal': 'error',
   'no-param-reassign': ['error', { props: false }],
+  '@typescript-eslint/consistent-type-imports': [
+    'error',
+    { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+  ],
+  'import-x/no-duplicates': 'error',
+  '@stylistic/max-len': [
+    'error',
+    {
+      code: 100,
+      ignoreUrls: true,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: true,
+      ignoreRegExpLiterals: true,
+    },
+  ],
   'no-inline-comments': 'error',
   'no-warning-comments': [
     'error',
     {
       terms: ['todo', 'fixme', 'hack', 'xxx', 'note', 'debug', 'review'],
-      location: 'anywhere'
-    }
+      location: 'anywhere',
+    },
   ],
   'hardlint/no-comments': 'error',
   'no-var': 'error',
   'prefer-const': 'error',
   'prefer-arrow-callback': 'error',
   'no-nested-ternary': 'error',
-  complexity: ['error', 10],
+  'complexity': ['error', 10],
   'max-depth': ['error', 3],
   'max-nested-callbacks': ['error', 3],
   'no-eval': 'error',
@@ -108,7 +125,7 @@ const hardlintRules: Linter.RulesRecord = {
     { selector: 'typeLike', format: ['PascalCase'] },
     { selector: 'enumMember', format: ['PascalCase', 'UPPER_CASE'] },
     { selector: 'import', format: ['camelCase', 'PascalCase'] },
-    { selector: ['objectLiteralProperty', 'objectLiteralMethod', 'typeProperty'], format: null }
+    { selector: ['objectLiteralProperty', 'objectLiteralMethod', 'typeProperty'], format: null },
   ],
 
   'prefer-template': 'error',
@@ -136,56 +153,77 @@ const hardlintRules: Linter.RulesRecord = {
 
   'sort-imports': 'off',
   'simple-import-sort/imports': 'error',
-  'simple-import-sort/exports': 'error'
+  'simple-import-sort/exports': 'error',
 };
 
 const ignores = {
-  ignores: ['node_modules/', 'dist/', '.next/', 'coverage/', 'examples/', 'scripts/']
+  ignores: ['node_modules/', 'dist/', '.next/', 'coverage/', 'examples/', 'scripts/'],
 };
 
 const hardlintLayer = {
   files: ['**/*.{ts,tsx,js,jsx,cjs,mjs}'],
   plugins: {
-    hardlint: hardlintPlugin,
-    'simple-import-sort': simpleImportSort
+    'hardlint': hardlintPlugin,
+    'simple-import-sort': simpleImportSort,
+    'import-x': importX,
   },
   languageOptions: {
     parser: tseslint.parser,
     globals: {
       ...globals.browser,
       ...globals.node,
-      ...globals.es2021
+      ...globals.es2021,
     },
     parserOptions: {
       ecmaVersion: 'latest' as const,
       sourceType: 'module' as const,
       ecmaFeatures: {
-        jsx: true
-      }
-    }
+        jsx: true,
+      },
+    },
   },
-  rules: hardlintRules
+  rules: hardlintRules,
 };
 
+const stylisticLayer = stylistic.configs.customize({
+  indent: 2,
+  quotes: 'single',
+  semi: true,
+  jsx: true,
+  commaDangle: 'always-multiline',
+  arrowParens: true,
+  braceStyle: '1tbs',
+  blockSpacing: true,
+});
+
 function buildConfig(tsConfigs: unknown[]) {
-  return [ignores, js.configs.recommended, ...tsConfigs, hardlintLayer];
+  return [ignores, js.configs.recommended, ...tsConfigs, stylisticLayer, hardlintLayer];
 }
+
+const typeCheckedLayer = {
+  files: ['**/*.{ts,tsx}'],
+  languageOptions: {
+    parserOptions: {
+      projectService: true,
+    },
+  },
+  rules: {
+    '@typescript-eslint/only-throw-error': 'error',
+  },
+};
 
 const hardlintConfig = buildConfig(tseslint.configs.recommended);
 
+export const strict = buildConfig(tseslint.configs.strict);
+
 export const typeChecked = [
   ...buildConfig(tseslint.configs.recommendedTypeChecked),
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      parserOptions: {
-        projectService: true
-      }
-    },
-    rules: {
-      '@typescript-eslint/only-throw-error': 'error'
-    }
-  }
+  typeCheckedLayer,
+];
+
+export const strictTypeChecked = [
+  ...buildConfig(tseslint.configs.strictTypeChecked),
+  typeCheckedLayer,
 ];
 
 export default hardlintConfig;

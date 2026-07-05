@@ -29,6 +29,10 @@ Portadas as regras equivalentes do `hard-lint-py` (Python) para o TypeScript.
 
 - **Estende o `typescript-eslint/recommended`** (baseline da comunidade) via meta-pacote `typescript-eslint`, em vez de catar regras à mão. Traz o conjunto TS-específico padrão (`no-non-null-assertion`, `ban-ts-comment`, `no-unsafe-function-type`, `no-empty-object-type`, etc.) e acompanha a evolução do plugin.
 - **Preset opcional type-checked** (`export { typeChecked }`): estende `recommendedTypeChecked` com `projectService` ligado, habilitando linting com informação de tipo (`no-floating-promises`, `no-misused-promises`, `await-thenable`, `only-throw-error`). Uso: `import { typeChecked } from 'hard-lint'`.
+- **Camada de formatação `@stylistic`** (recupera a filosofia de formatação sincronizada do `black`/`isort` do `hard-lint-py`): perfil opinativo via `stylistic.configs.customize` (2 espaços, aspas simples, ponto-e-vírgula, trailing comma `always-multiline`, `1tbs`) + `@stylistic/max-len` 100. Como o preset proíbe o Prettier (config lockdown), agora ele **provê** a formatação em vez de só bani-la.
+- **`@typescript-eslint/consistent-type-imports`** (força `import type`, com `fixStyle: separate-type-imports`).
+- **`import-x/no-duplicates`** (via `eslint-plugin-import-x`): proíbe imports duplicados do mesmo módulo.
+- **Tiers `strict` e `strictTypeChecked`** (`export { strict, strictTypeChecked }`): estendem `tseslint.configs.strict` / `strictTypeChecked` para quem quer o máximo rigor. Ladder: `default` → `strict` → `typeChecked` → `strictTypeChecked`.
 - `eqeqeq` (`always`, ignorando `== null`), `no-throw-literal` e `no-param-reassign` (`{ props: false }`) adicionados ao preset base.
 - Globals aplicados também a `.cjs`/`.mjs` (arquivos de config CommonJS).
 

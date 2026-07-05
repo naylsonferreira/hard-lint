@@ -8,25 +8,25 @@ export function createHardLintConfig(): ESLintConfig[] {
 export const SEVERITY = {
   ERROR: 'error' as const,
   WARN: 'warn' as const,
-  OFF: 'off' as const
+  OFF: 'off' as const,
 };
 
 export const PRESETS = {
   strict: (): HardLintConfig => ({
     e2eRules: true,
     nextRules: true,
-    defaultSeverity: 'error'
+    defaultSeverity: 'error',
   }),
 
   moderate: (): HardLintConfig => ({
     e2eRules: true,
     nextRules: true,
-    defaultSeverity: 'warn'
+    defaultSeverity: 'warn',
   }),
 
   minimal: (): HardLintConfig => ({
     e2eRules: false,
     nextRules: false,
-    defaultSeverity: 'warn'
-  })
+    defaultSeverity: 'warn',
+  }),
 };

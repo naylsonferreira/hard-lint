@@ -101,7 +101,19 @@ import { typeChecked } from 'hard-lint';
 export default [...typeChecked];
 ```
 
-> Use **um** dos dois: `hardlint` (padrão, sem type info) **ou** `typeChecked` (mais lento, exige `tsconfig`). O `typeChecked` já inclui todas as regras do preset base.
+> Escolha **um** tier (todos incluem a mesma base de regras + formatação):
+>
+> | Export | Baseline typescript-eslint | Type info | Quando usar |
+> |--------|----------------------------|-----------|-------------|
+> | `default` (`import hardlint`) | `recommended` | ❌ | Padrão, zero-config |
+> | `strict` | `strict` | ❌ | Mais rígido, ainda sem `tsconfig` |
+> | `typeChecked` | `recommendedTypeChecked` | ✅ | Regras type-aware, exige `tsconfig` |
+> | `strictTypeChecked` | `strictTypeChecked` | ✅ | Máximo rigor |
+>
+> ```javascript
+> import { strict } from 'hard-lint';         // ou strictTypeChecked
+> export default [...strict];
+> ```
 
 ## Regras Implementadas
 
@@ -113,6 +125,7 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 |-------|-----------|--------|
 | `@typescript-eslint/no-explicit-any` | ❌ Error | Proíbe tipo `any` |
 | `@typescript-eslint/no-unused-vars` | ❌ Error | Detecta variáveis não usadas (permite `_var`) |
+| `@typescript-eslint/consistent-type-imports` | ❌ Error | Força `import type` para tipos |
 
 ### 🚫 Console & Comentários
 
@@ -174,6 +187,22 @@ O preset base estende o **`typescript-eslint/recommended`** e adiciona as regras
 |-------|-----------|--------|
 | `simple-import-sort/imports` | ❌ Error | Ordena as declarações de import por grupos |
 | `simple-import-sort/exports` | ❌ Error | Ordena os re-exports |
+| `import-x/no-duplicates` | ❌ Error | Proíbe imports duplicados do mesmo módulo |
+
+### 🎨 Formatação (`@stylistic`, filosofia black/isort do hard-lint-py)
+
+Como o Prettier é proibido pelo config lockdown, o hard-lint **provê** a formatação (perfil opinativo, tudo auto-fixável):
+
+| Aspecto | Valor |
+|---------|-------|
+| Indentação | 2 espaços |
+| Aspas | simples |
+| Ponto-e-vírgula | obrigatório |
+| Trailing comma | `always-multiline` |
+| Brace style | `1tbs` |
+| Comprimento de linha | 100 (`@stylistic/max-len`) |
+
+Rode `eslint --fix` para formatar automaticamente.
 
 ### 🔒 Segurança
 
