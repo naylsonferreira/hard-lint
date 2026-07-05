@@ -25,7 +25,12 @@ Portadas as regras equivalentes do `hard-lint-py` (Python) para o TypeScript.
 - **Install status guard** (`scripts/validate-install-status.js`), equivalente ao `check_install_status`: verifica que os hooks estão instalados e `core.hooksPath` aponta para `.hardlint/_`.
 - **Barrel exports guard** (`scripts/validate-barrel-exports.js`), equivalente ao `empty-init`: arquivos `index.*` só podem re-exportar (sem lógica). Roda no lint-staged.
 - **Comando `verify`** (`npm run verify`), equivalente ao `verify` do Python: roda config lockdown + install status + eslint + barrel + testes (`npm test`, se existir).
-- **Globals de browser/node/es2021** declarados no preset (via pacote `globals`), evitando avalanche de `no-undef` em projetos front-end/Next (`window`, `fetch`, `FormData`, `URLSearchParams`, `setTimeout`, etc.).
+- **Globals de browser/node/es2021** declarados no preset (via pacote `globals`), melhorando a análise de escopo (`window`, `fetch`, `FormData`, `URLSearchParams`, `setTimeout`, etc.).
+
+### Fixed
+
+- `no-undef` desligado (o compilador TypeScript já cobre nomes indefinidos; evita falsos-positivos com o JSX automatic runtime — `React` — e tipos do lib DOM como `RequestInit`), seguindo a recomendação do typescript-eslint.
+- `no-unused-vars` (base) desligado em favor de `@typescript-eslint/no-unused-vars`, evitando relatório duplicado.
 
 ### Changed
 
