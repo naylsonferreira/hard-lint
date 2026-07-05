@@ -3,6 +3,7 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
 import type { Rule } from 'eslint';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import globals from 'globals';
 
 const hardlintPlugin = {
   rules: {
@@ -78,8 +79,9 @@ const hardlintConfig = [
     languageOptions: {
       parser: tsparser,
       globals: {
-        module: 'readonly',
-        require: 'readonly'
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021
       },
       parserOptions: {
         ecmaVersion: 'latest',
